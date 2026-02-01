@@ -26,3 +26,10 @@ To run this project you will need to set your environment variables.
 This project was customized and analyzed to understand real-world Django CRM architecture, including authentication flows, relational data modeling, and production-style project structure.
 
 
+## Tech Stack
+
+- Backend: Python, Django
+- Frontend: HTML, CSS, JavaScript
+- Database: SQLite (development)
+- Tools: Git, Virtual Environment, python-dotenv
+
