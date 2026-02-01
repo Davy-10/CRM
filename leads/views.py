@@ -1,3 +1,6 @@
+# Handles core lead management logic for the CRM application
+
+
 import logging
 import datetime
 from django import contrib
@@ -11,10 +14,10 @@ from django.views import generic
 from agents.mixins import OrganisorAndLoginRequiredMixin
 from .models import Lead, Agent, Category, FollowUp
 from .forms import (
-    LeadForm, 
-    LeadModelForm, 
-    CustomUserCreationForm, 
-    AssignAgentForm, 
+    LeadForm,
+    LeadModelForm,
+    CustomUserCreationForm,
+    AssignAgentForm,
     LeadCategoryUpdateForm,
     CategoryModelForm,
     FollowUpModelForm
@@ -53,7 +56,8 @@ class DashboardView(OrganisorAndLoginRequiredMixin, generic.TemplateView):
         user = self.request.user
 
         # How many leads we have in total
-        total_lead_count = Lead.objects.filter(organisation=user.userprofile).count()
+        total_lead_count = Lead.objects.filter(
+            organisation=user.userprofile).count()
 
         # How many new leads in the last 30 days
         thirty_days_ago = datetime.date.today() - datetime.timedelta(days=30)
@@ -92,12 +96,12 @@ class LeadListView(LoginRequiredMixin, generic.ListView):
         # initial queryset of leads for the entire organisation
         if user.is_organisor:
             queryset = Lead.objects.filter(
-                organisation=user.userprofile, 
+                organisation=user.userprofile,
                 agent__isnull=False
             )
         else:
             queryset = Lead.objects.filter(
-                organisation=user.agent.organisation, 
+                organisation=user.agent.organisation,
                 agent__isnull=False
             )
             # filter for the agent that is logged in
@@ -109,7 +113,7 @@ class LeadListView(LoginRequiredMixin, generic.ListView):
         user = self.request.user
         if user.is_organisor:
             queryset = Lead.objects.filter(
-                organisation=user.userprofile, 
+                organisation=user.userprofile,
                 agent__isnull=True
             )
             context.update({
@@ -136,7 +140,8 @@ class LeadDetailView(LoginRequiredMixin, generic.DetailView):
         if user.is_organisor:
             queryset = Lead.objects.filter(organisation=user.userprofile)
         else:
-            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+            queryset = Lead.objects.filter(
+                organisation=user.agent.organisation)
             # filter for the agent that is logged in
             queryset = queryset.filter(agent__user=user)
         return queryset
@@ -245,7 +250,7 @@ class AssignAgentView(OrganisorAndLoginRequiredMixin, generic.FormView):
             "request": self.request
         })
         return kwargs
-        
+
     def get_success_url(self):
         return reverse("leads:lead-list")
 
@@ -376,7 +381,8 @@ class LeadCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
         if user.is_organisor:
             queryset = Lead.objects.filter(organisation=user.userprofile)
         else:
-            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+            queryset = Lead.objects.filter(
+                organisation=user.agent.organisation)
             # filter for the agent that is logged in
             queryset = queryset.filter(agent__user=user)
         return queryset
@@ -427,9 +433,11 @@ class FollowUpUpdateView(LoginRequiredMixin, generic.UpdateView):
         user = self.request.user
         # initial queryset of leads for the entire organisation
         if user.is_organisor:
-            queryset = FollowUp.objects.filter(lead__organisation=user.userprofile)
+            queryset = FollowUp.objects.filter(
+                lead__organisation=user.userprofile)
         else:
-            queryset = FollowUp.objects.filter(lead__organisation=user.agent.organisation)
+            queryset = FollowUp.objects.filter(
+                lead__organisation=user.agent.organisation)
             # filter for the agent that is logged in
             queryset = queryset.filter(lead__agent__user=user)
         return queryset
@@ -449,13 +457,14 @@ class FollowUpDeleteView(OrganisorAndLoginRequiredMixin, generic.DeleteView):
         user = self.request.user
         # initial queryset of leads for the entire organisation
         if user.is_organisor:
-            queryset = FollowUp.objects.filter(lead__organisation=user.userprofile)
+            queryset = FollowUp.objects.filter(
+                lead__organisation=user.userprofile)
         else:
-            queryset = FollowUp.objects.filter(lead__organisation=user.agent.organisation)
+            queryset = FollowUp.objects.filter(
+                lead__organisation=user.agent.organisation)
             # filter for the agent that is logged in
             queryset = queryset.filter(lead__agent__user=user)
         return queryset
-
 
 
 # def lead_update(request, pk):
@@ -504,10 +513,10 @@ class FollowUpDeleteView(OrganisorAndLoginRequiredMixin, generic.DeleteView):
 class LeadJsonView(generic.View):
 
     def get(self, request, *args, **kwargs):
-        
+
         qs = list(Lead.objects.all().values(
-            "first_name", 
-            "last_name", 
+            "first_name",
+            "last_name",
             "age")
         )
 
