@@ -33,3 +33,12 @@ This project was customized and analyzed to understand real-world Django CRM arc
 - Database: SQLite (development)
 - Tools: Git, Virtual Environment, python-dotenv
 
+
+## Project Structure
+
+- `djcrm/` – Core project settings and configuration  
+- `leads/` – Application handling lead and agent management logic  
+- `templates/` – HTML templates for rendering UI  
+- `static/` – Static assets such as CSS and JavaScript  
+- `manage.py` – Django project entry point  
+
